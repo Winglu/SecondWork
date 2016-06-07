@@ -20,6 +20,7 @@ import ds.EdgeTrussness;
 
 /**
  * After calling trussDecomposition, the graph must be reloaded
+ * Moved to git hub
  * @author luchen
  *
  */
@@ -58,7 +59,7 @@ public class TrussDecomposition {
 		}
 		
 		
-		int k = 0;
+		int k = 2;
 		int j = k-2;
 		
 		while(g.edgeSet().size()!=0){
