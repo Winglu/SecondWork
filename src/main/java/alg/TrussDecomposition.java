@@ -192,7 +192,7 @@ public class TrussDecomposition {
 		}
 		
 	}
-	
+	/*
 	private void supportComputation(Hashtable<DefaultEdge, EdgeSupport> esl,NeighborIndex<Vertex, DefaultEdge> ni){
 		Set<DefaultEdge> edges = g.edgeSet();
 		Vertex sv;
@@ -216,7 +216,7 @@ public class TrussDecomposition {
 		}
 		
 	}
-	
+	*/
 	
 	
 	public void trussDecomposition_workable(){
@@ -366,7 +366,7 @@ public class TrussDecomposition {
 		Hashtable<DefaultEdge, EdgeSupport> edgeSupport = new Hashtable<>();
 		
 		//setup a queue to store edges that have number of support less than k  
-		Queue<EdgeSupport> q = new LinkedBlockingQueue<>();
+		//Queue<EdgeSupport> q = new LinkedBlockingQueue<>();
 
 		//reducing creations of variable 
 		Vertex sv;
@@ -378,7 +378,7 @@ public class TrussDecomposition {
 		//number of edge
 		int noe = g.edgeSet().size();
 		//number of maximal support
-		int noms = noe-2;
+		//int noms = noe-2;
 		
 		int [] supportSpace = new int [noe-2];
 		
@@ -431,7 +431,7 @@ public class TrussDecomposition {
 		//good sort!!!!
 		//compute start location for each support number
 		
-		int l = 0; //initial location
+		//int l = 0; //initial location
 		//key: number of support, value location in the sorted array
 		int [] initialLoction = new int [noe-1];
 		initialLoction[0] =0;

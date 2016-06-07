@@ -1,22 +1,27 @@
 package com.swin.luchen.ssc;
 
-import java.util.Hashtable;
+import org.jgrapht.graph.DefaultEdge;
+
+import alg.CommunityQuerier;
+
+//import java.util.Hashtable;
 
 //import java.util.List;
 
 //import org.jgrapht.alg.DijkstraShortestPath;
-import java.util.List;
-import java.util.Set;
+//import java.util.List;
+//import java.util.Set;
 
-import org.jgrapht.alg.NeighborIndex;
-import org.jgrapht.graph.DefaultEdge;
-import org.jgrapht.traverse.BreadthFirstIterator;
+//import org.jgrapht.alg.NeighborIndex;
+//import org.jgrapht.graph.DefaultEdge;
+//import org.jgrapht.traverse.BreadthFirstIterator;
 
 import alg.TrussDecomposition;
 import jgraphtResearch.Graph;
+import jgraphtResearch.Vertex;
 import utility.FileReader;
 //import jgraphtResearch.Graph;
-import jgraphtResearch.Vertex;
+//import jgraphtResearch.Vertex;
 
 
 
@@ -33,9 +38,14 @@ public class App
         
         td.trussDecomposition();
         
+        FileReader.readAdjacentList();
         
         
-  
+        
+        CommunityQuerier cq = new CommunityQuerier(td.et,Graph.uGraph);
+        
+        
+        cq.queryCommunityByVertex(new Vertex("q"), 4);
         
         
         //Set<DefaultEdge> s = Graph.uGraph.edgeSet();
