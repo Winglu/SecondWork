@@ -1,0 +1,15 @@
+t,p1,p3,p2,p4,r1,r3,r2
+r2,t,r1,q,r3
+r1,t,r2,r3,q
+r3,r2,t,r1,q
+q,r1,r2,r3,p3,p1,p4,p2,x1,x2
+p3,t,q,p4,p1
+p1,t,p3,q,p2
+p2,p1,p4,t,q,s1,x1
+p4,p2,p3,t,q
+s1,p2,s3,s4,s2
+s2,s1,s3,s4
+s3,s1,x1,s4,s2
+s4,x2,s3,s1,s2
+x1,q,p2,s3
+x2,q,s4
