@@ -12,12 +12,14 @@ import org.jgrapht.graph.DefaultEdge;
  */
 public class EdgeTrussness {
 
-	//
+	 
 	public Hashtable<DefaultEdge,Integer> et;
-	
+	//since the graph is modified we may need use string rather than object as the key of hash table
+	public Hashtable<String,Integer> ets;
 	public EdgeTrussness(){
 		
 		et = new Hashtable<>();
+		ets = new Hashtable<>();
 	}
 	
 	

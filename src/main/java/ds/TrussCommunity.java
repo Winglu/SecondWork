@@ -11,4 +11,14 @@ public class TrussCommunity {
 		tc = new ArrayList<>();
 		
 	}
+	
+	
+	
+	
+	public String toString(){
+		
+		return tc.toString();
+	}
+	
+	
 }

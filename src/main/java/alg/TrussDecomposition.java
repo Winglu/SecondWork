@@ -30,10 +30,13 @@ public class TrussDecomposition {
 
 	public  UndirectedGraph<Vertex, DefaultEdge> g;
 	
+	private Queue<DefaultEdge> removedEdges;
+	
 	public  EdgeTrussness et; 
 	
 	public TrussDecomposition(UndirectedGraph<Vertex, DefaultEdge> g){
 		this.g = g;
+		removedEdges = new LinkedBlockingQueue<>();
 		et = new EdgeTrussness();
 		
 	}
@@ -52,11 +55,11 @@ public class TrussDecomposition {
 		//supportComputation(edgeSupport,ni);
 		
 		
-		Iterator<Map.Entry<DefaultEdge, EdgeSupport> > isz = edgeSupport.entrySet().iterator();
+		/*Iterator<Map.Entry<DefaultEdge, EdgeSupport> > isz = edgeSupport.entrySet().iterator();
 		while(isz.hasNext()){
 			Map.Entry<DefaultEdge, EdgeSupport> m  = isz.next();
 			System.out.println(m.getKey()+"support: "+m.getValue().support);
-		}
+		}*/
 		
 		
 		int k = 2;
@@ -69,20 +72,34 @@ public class TrussDecomposition {
 		}
 		
 		
-		Iterator<Map.Entry<DefaultEdge, Integer> > i = et.et.entrySet().iterator();
+		graphRecovery();
+		
+		/*Iterator<Map.Entry<DefaultEdge, Integer> > i = et.et.entrySet().iterator();
 		while(i.hasNext()){
 			Map.Entry<DefaultEdge, Integer> m  = i.next();
 			System.out.println(m.getKey()+"'s trussness is:"+m.getValue());
 		}
 		System.out.println(et.et.size());
-		System.out.println(g);
+		System.out.println(g);*/
 		
-		/*
-		 * debug: pass
-		 */
      
 	}
 	
+	
+	private void graphRecovery(){
+		
+		while(removedEdges.isEmpty()!=true){
+			
+			DefaultEdge e = removedEdges.poll();
+			Vertex sv = g.getEdgeSource(e);
+			Vertex tv = g.getEdgeTarget(e);
+			g.addEdge(sv, tv,e);
+			
+			
+			
+		}
+		
+	}
 	
 	//!!!!!!!!!!!  neighbor index must be recalculated during the graph update
 	
@@ -128,6 +145,10 @@ public class TrussDecomposition {
 			//System.out.println(support);
 			if(support<j){
 				
+				//for graph recover purpose
+				removedEdges.add(e);
+				
+				
 				g.removeEdge(e);
 				ni = new NeighborIndex<>(g);
 			}else{
@@ -163,6 +184,7 @@ public class TrussDecomposition {
 					aess.support = aess.support - 1;
 					if(aess.support<j){
 						q.add(aess);
+						removedEdges.add(aess.e);
 						g.removeEdge(aess.e);
 						//ni = new NeighborIndex<>(g);
 					}
@@ -174,6 +196,7 @@ public class TrussDecomposition {
 					aets.support = aets.support - 1;
 					if(aets.support<j){
 						q.add(aets);
+						removedEdges.add(aets.e);
 						g.removeEdge(aets.e);
 						//ni = new NeighborIndex<>(g);
 					}
@@ -188,6 +211,7 @@ public class TrussDecomposition {
 		//for all edges that currently in the graph, they should all have trussness of j
 		edges = g.edgeSet();
 		for(DefaultEdge e:edges){
+			
 			et.et.put(e, j+2);
 		}
 		

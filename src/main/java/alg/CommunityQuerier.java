@@ -30,12 +30,12 @@ public class CommunityQuerier {
 		NeighborIndex<Vertex, DefaultEdge> ni = new NeighborIndex<>(g);
 		ArrayList<DefaultEdge> nov = new ArrayList<>(g.edgesOf(v));
 	
-		System.out.println(et.et);
+		//System.out.println(et.et);
 		
 		for(DefaultEdge ce:nov){
-			System.out.println(ce);
+			//System.out.println(ce);
 			int ceSupport = et.et.get(ce);
-			if(ceSupport>=k && !visited.contains(visited)){
+			if(ceSupport>=k && !visited.contains(ce)){
 				//need a data structure to store the k-truss community
 				//the bfs goes here
 				Queue<DefaultEdge> q = new LinkedBlockingQueue<>();
