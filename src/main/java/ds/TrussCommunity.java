@@ -1,14 +1,15 @@
 package ds;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 
 import org.jgrapht.graph.DefaultEdge;
 
 public class TrussCommunity {
-	public ArrayList<DefaultEdge> tc;
+	public HashSet<DefaultEdge> tc;
 	
 	public TrussCommunity(){
-		tc = new ArrayList<>();
+		tc = new HashSet<>();
 		
 	}
 	

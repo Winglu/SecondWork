@@ -1,5 +1,7 @@
 package com.swin.luchen.ssc;
 
+import java.util.ArrayList;
+
 import org.jgrapht.graph.DefaultEdge;
 
 import alg.CommunityQuerier;
@@ -16,6 +18,7 @@ import alg.CommunityQuerier;
 //import org.jgrapht.graph.DefaultEdge;
 //import org.jgrapht.traverse.BreadthFirstIterator;
 
+import alg.TCPIndexing;
 import alg.TrussDecomposition;
 import jgraphtResearch.Graph;
 import jgraphtResearch.Vertex;
@@ -50,20 +53,24 @@ public class App
     	
     	
     	FileReader.readAdjacentList();
-        
+    	//ArrayList<DefaultEdge> nov = new ArrayList<>(Graph.uGraph.edgesOf(new Vertex("x1")));
+    	//System.out.println(Graph.uGraph);
+    	//System.out.println(nov);
         TrussDecomposition td = new TrussDecomposition(Graph.uGraph);
         
         td.trussDecomposition();
         
+        TCPIndexing idex = new TCPIndexing(Graph.uGraph,td.et);
+        idex.TCPIndexConstruction();
         FileReader.readAdjacentList();
         
         
         
         CommunityQuerier cq = new CommunityQuerier(td.et,Graph.uGraph);
+        cq.TCPIndex = idex.TCPindex;
         
-        
-        cq.queryCommunityByVertex(new Vertex("q"), 4);
-    	
+        //cq.queryCommunityByVertex(new Vertex("q"), 2);
+    	cq.queryComminityByVertexTCP(new Vertex("q"), 4);
         
         //Set<DefaultEdge> s = Graph.uGraph.edgeSet();
        /*NeighborIndex<Vertex, DefaultEdge> ni = new NeighborIndex<>(Graph.uGraph);
