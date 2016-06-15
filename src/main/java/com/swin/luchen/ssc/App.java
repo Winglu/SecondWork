@@ -52,39 +52,19 @@ public class App
     	System.out.println(e1.equals(e2));*/
     	
     	
-    	FileReader.readAdjacentList();
-    	//ArrayList<DefaultEdge> nov = new ArrayList<>(Graph.uGraph.edgesOf(new Vertex("x1")));
-    	//System.out.println(Graph.uGraph);
-    	//System.out.println(nov);
+/*    	FileReader.readAdjacentList();
         TrussDecomposition td = new TrussDecomposition(Graph.uGraph);
-        
         td.trussDecomposition();
-        
         TCPIndexing idex = new TCPIndexing(Graph.uGraph,td.et);
         idex.TCPIndexConstruction();
         FileReader.readAdjacentList();
-        
-        
-        
         CommunityQuerier cq = new CommunityQuerier(td.et,Graph.uGraph);
         cq.TCPIndex = idex.TCPindex;
+    	cq.queryComminityByVertexTCP(new Vertex("q"), 4);*/
+    	
+        FileReader.readCoords();
+
         
-        //cq.queryCommunityByVertex(new Vertex("q"), 2);
-    	cq.queryComminityByVertexTCP(new Vertex("q"), 4);
-        
-        //Set<DefaultEdge> s = Graph.uGraph.edgeSet();
-       /*NeighborIndex<Vertex, DefaultEdge> ni = new NeighborIndex<>(Graph.uGraph);
-       List<Vertex> l = ni.neighborListOf(new Vertex("t"));
-       List<Vertex> l2 = ni.neighborListOf(new Vertex("p1"));
-       System.out.println(l);
-       System.out.println(l2);
-       l.retainAll(l2);
-       System.out.println(l);
-       System.out.println(ni.neighborListOf(new Vertex("t")));*/
-        
-        
-        //System.out.println(Graph.uGraph);
-       //System.out.println(Graph.uGraph.getEdge(new Vertex("t"), new Vertex("p1")));
-        
+
     }
 }

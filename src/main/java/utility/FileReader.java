@@ -14,6 +14,47 @@ public class FileReader {
 	
 	
 	/**
+	 * read coordinates
+	 */
+	
+	public static void readCoords(){
+		ClassLoader classloader = Thread.currentThread().getContextClassLoader();
+		InputStream is = classloader.getResourceAsStream("aix.txt");
+		String str = "";
+		String[] sstr;
+		
+		try{
+			BufferedReader reader = new BufferedReader(new InputStreamReader(is));
+			if(is!=null){
+				//read adjacentList line by line
+				while((str = reader.readLine())!=null){
+					//System.out.println(str);
+					sstr = str.split(":");
+					for(int i=1; i<sstr.length; i++){
+						//test okay 
+						System.out.println(sstr[0]+":"+sstr[i]);
+
+					}
+					
+				}
+				
+			}
+			
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}finally{
+			try {
+				is.close();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+	}
+	
+	
+	/**
 	 * read edges
 	 */
 	public static void readEdgesFromFile(){
