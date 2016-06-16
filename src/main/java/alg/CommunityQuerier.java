@@ -183,6 +183,8 @@ public class CommunityQuerier {
 							}
 						}
 					}
+					svn.clear();
+					tvn.clear();
 				}
 				//debug only
 				System.out.println(tc);

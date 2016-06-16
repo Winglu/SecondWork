@@ -6,6 +6,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 
+import ds.DistanceIndex;
+import ds.Point;
 import jgraphtResearch.Graph;
 import jgraphtResearch.Vertex;
 
@@ -30,12 +32,13 @@ public class FileReader {
 				while((str = reader.readLine())!=null){
 					//System.out.println(str);
 					sstr = str.split(":");
-					for(int i=1; i<sstr.length; i++){
-						//test okay 
-						System.out.println(sstr[0]+":"+sstr[i]);
-
-					}
 					
+					String vId = sstr[0];
+					String[] coordS = sstr[1].split(",");
+					Point ap = new Point(Double.parseDouble(coordS[0]),Double.parseDouble(coordS[1]));
+					DistanceIndex.coords.put(vId, ap);
+					//System.out.println(sstr[0]+":"+ap);
+
 				}
 				
 			}
