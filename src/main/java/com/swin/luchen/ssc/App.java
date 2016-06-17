@@ -1,13 +1,13 @@
 package com.swin.luchen.ssc;
 
-import java.util.ArrayList;
+//import java.util.ArrayList;
 
-import org.jgrapht.graph.DefaultEdge;
+//import org.jgrapht.graph.DefaultEdge;
 
 import ds.Community;
 import ds.DistanceIndex;
 import alg.CommunityDetector;
-import alg.CommunityQuerier;
+//import alg.CommunityQuerier;
 
 //import java.util.Hashtable;
 
@@ -22,10 +22,10 @@ import alg.CommunityQuerier;
 //import org.jgrapht.traverse.BreadthFirstIterator;
 
 import alg.SpSoComQuerier;
-import alg.TCPIndexing;
+//import alg.TCPIndexing;
 import alg.TrussDecomposition;
 import jgraphtResearch.Graph;
-import jgraphtResearch.Vertex;
+//import jgraphtResearch.Vertex;
 import utility.FileReader;
 //import jgraphtResearch.Graph;
 //import jgraphtResearch.Vertex;
@@ -60,20 +60,24 @@ public class App
         TrussDecomposition td = new TrussDecomposition(Graph.uGraph);
         td.trussDecomposition();
         
+        
+        System.out.println(td.et);
         //initialize spatial index
-        FileReader.readCoords();
-        DistanceIndex.coordsToDistance();
+        //FileReader.readCoords();
+        //DistanceIndex.coordsToDistance();
         
         
-        CommunityDetector cd = new CommunityDetector();
-        cd.et = td.et;
-        cd.detectCommunityOnGraph(Graph.uGraph, 4);
+        //CommunityDetector cd = new CommunityDetector();
+        //cd.et = td.et;
+        //cd.detectCommunityOnGraph(Graph.uGraph, 4);
         
-        Community c = cd.comList.get(1);
-        SpSoComQuerier ssco = new SpSoComQuerier();
+        //Community c = cd.comList.get(1);
+        //SpSoComQuerier ssco = new SpSoComQuerier();
         //System.out.println(c);
-        //ssco.verifyingCommunityDistance(c,2.9);
-        ssco.test(c,2.9,4);
+        //ssco.test(c,2.9,4);
+        
+        /*********************************************************/
+        
         //TCPIndexing idex = new TCPIndexing(Graph.uGraph,td.et);
         //idex.TCPIndexConstruction();
         //FileReader.readAdjacentList();

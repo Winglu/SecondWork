@@ -44,7 +44,7 @@ public class TrussDecomposition {
 	
 	/**
 	 * 
-	 * no bug left, only may have performance issues 
+	 * no bug left, only may have performance issues   (may still have bug)
 	 * 
 	 */
 	public void trussDecomposition(){
@@ -86,54 +86,26 @@ public class TrussDecomposition {
 	}
 	
 	
-	private void graphRecovery(){
-		
-		while(removedEdges.isEmpty()!=true){
-			
-			DefaultEdge e = removedEdges.poll();
-			Vertex sv = g.getEdgeSource(e);
-			Vertex tv = g.getEdgeTarget(e);
-			g.addEdge(sv, tv,e);
-			
-			
-			
-		}
-		
-	}
 	
+	
+
 	//!!!!!!!!!!!  neighbor index must be recalculated during the graph update
-	
 	private void removeUnsupportedEdges(Hashtable<DefaultEdge, EdgeSupport> esl,NeighborIndex<Vertex, DefaultEdge> ni,int j){
 		//support of each edge has been calculated
-		//ni = new NeighborIndex<>(g);
 		Queue<EdgeSupport> q = new LinkedBlockingQueue<>();
-		
-		//for all edges less than j are removed and put them in to a queue
-		/*
-		Iterator<Map.Entry<DefaultEdge, EdgeSupport> > isz = es.entrySet().iterator();
-		while(isz.hasNext()){
-			Map.Entry<DefaultEdge, EdgeSupport> m  = isz.next();
-			
-			if(m.getValue().support<j){
-				//added it into q
-				q.add(m.getValue());
-				//remove it from g
-				g.removeEdge(m.getValue().e);
-				//ni = new NeighborIndex<>(g);
-			}
-		}
-		*/
+
 		Set<DefaultEdge> edges = g.edgeSet();
 		ArrayList<DefaultEdge> edgeList = new ArrayList<>(edges);
 		Vertex sv;
 		Vertex tv;
 		ArrayList<Vertex> svn = new ArrayList<>();
 		ArrayList<Vertex> tvn = new ArrayList<>();
+		ni = new NeighborIndex<>(g);
 		
 		Iterator<DefaultEdge> ide = edgeList.iterator();
 		while(ide.hasNext()){
 		//for(DefaultEdge e:edges){
-			ni = new NeighborIndex<>(g);
+			
 			DefaultEdge e = ide.next();
 			sv = g.getEdgeSource(e);
 			tv = g.getEdgeTarget(e);
@@ -147,8 +119,7 @@ public class TrussDecomposition {
 				
 				//for graph recover purpose
 				removedEdges.add(e);
-				
-				
+			
 				g.removeEdge(e);
 				ni = new NeighborIndex<>(g);
 			}else{
@@ -167,7 +138,7 @@ public class TrussDecomposition {
 		ni = new NeighborIndex<>(g);
 
 		while(q.isEmpty()!=true){
-			ni = new NeighborIndex<>(g);
+			//ni = new NeighborIndex<>(g);
 			EdgeSupport ces = q.poll();
 			//get edge source and target
 			sv = g.getEdgeSource(ces.e);
@@ -216,6 +187,23 @@ public class TrussDecomposition {
 		}
 		
 	}
+	
+	
+	private void graphRecovery(){
+		
+		while(removedEdges.isEmpty()!=true){
+			
+			DefaultEdge e = removedEdges.poll();
+			Vertex sv = g.getEdgeSource(e);
+			Vertex tv = g.getEdgeTarget(e);
+			g.addEdge(sv, tv,e);
+			
+			
+			
+		}
+		
+	}
+	
 	/*
 	private void supportComputation(Hashtable<DefaultEdge, EdgeSupport> esl,NeighborIndex<Vertex, DefaultEdge> ni){
 		Set<DefaultEdge> edges = g.edgeSet();

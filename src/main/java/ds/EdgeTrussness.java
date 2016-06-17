@@ -45,5 +45,10 @@ public class EdgeTrussness {
 		
 	}
 	
+	public String toString(){
+		
+		return "size "+et.size()+","+et.toString();
+	}
+	
 	
 }
