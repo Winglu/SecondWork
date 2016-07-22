@@ -4,6 +4,7 @@ package alg;
 import java.util.ArrayList;
 import java.util.Hashtable;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 import java.util.Queue;
 import java.util.Set;
@@ -13,6 +14,7 @@ import jgraphtResearch.Vertex;
 
 import org.jgrapht.UndirectedGraph;
 import org.jgrapht.alg.NeighborIndex;
+import org.jgrapht.event.GraphEdgeChangeEvent;
 import org.jgrapht.graph.DefaultEdge;
 
 import ds.EdgeSupport;
@@ -38,6 +40,231 @@ public class TrussDecomposition {
 		this.g = g;
 		removedEdges = new LinkedBlockingQueue<>();
 		et = new EdgeTrussness();
+		
+	}
+	
+	
+	
+	/**
+	 * Advanced implementation
+	 */
+	
+	
+	public void sortBasedTD(){
+		/*compute support of each edge*/
+		Hashtable<DefaultEdge, EdgeSupport> esh = new Hashtable<>();
+		int maxSupport = edgesSupport(esh);
+		
+		/*initialize auxiliary array*/
+		int a[] = new int [maxSupport+1]; // a[0] is used for edges that do not belong to any triangles 
+		for(int i=0; i<=maxSupport; i++){
+			a[i]=0;
+		}
+		/*collect support statistics*/
+		Set<DefaultEdge> edges = g.edgeSet();
+		for(DefaultEdge e:edges){
+			a[esh.get(e).support]++;
+		}
+		
+		/*for(int i=0; i<a.length; i++){
+			System.out.println(i+":"+a[i]);
+			
+		}*/
+		
+		
+		int l = 0;
+		for(int i=0; i<=maxSupport; i++){
+			int t = a[i];
+			a[i] = l;
+			l = l+t;
+		}//now a[i] stores the position of first edge with support of i in s
+		
+		
+		
+		/*initialize edge array*/
+		DefaultEdge [] s = new DefaultEdge[edges.size()];
+		
+		Hashtable<DefaultEdge, Integer> eph = new Hashtable<>();
+		for(DefaultEdge e:edges){
+			s[a[esh.get(e).support]] = e;
+			eph.put(e, a[esh.get(e).support]);
+			a[esh.get(e).support]++;
+			//need to store position information for each edge
+		}
+		
+		//printArray(s);
+		for(int i=0; i<a.length; i++){
+			a[i]--;
+		}
+		
+		
+		/*Testing：pass*/
+		/*for(int i=0; i<s.length; i++){
+			System.out.println(s[i]+"support is:"+esh.get(s[i]).support);
+			
+		}
+		for(int i=0; i<a.length; i++){
+			System.out.println(i+":"+a[i]);
+			
+		}
+		*/
+		/*Testing*/
+		
+		/*real decomposition*/
+		efficientTD(s,a,eph,esh);
+	}
+	
+	private void efficientTD(DefaultEdge [] s,
+			int [] a,
+			Hashtable<DefaultEdge, Integer> eph,
+			Hashtable<DefaultEdge, EdgeSupport> esh){
+		
+		int k = 2;
+		//NeighborIndex<Vertex, DefaultEdge> ni = new NeighborIndex<>(g);
+		//System.out.println(s.length);
+		for(int i=0; i<s.length; i++){
+			NeighborIndex<Vertex, DefaultEdge> ni = new NeighborIndex<>(g);
+			if(i>a[k-2]){
+				k++;
+			}
+			DefaultEdge e = s[i];
+			
+			//move e to processed edges
+			/*Veli Veli important*/
+			if(esh.get(e).support>0){
+				a[esh.get(e).support-1]++;
+			}
+			
+			
+			Vertex se = g.getEdgeSource(e);
+			Vertex te = g.getEdgeTarget(e);
+			Vertex nlv,nhv;
+			if(ni.neighborsOf(se).size()<= ni.neighborsOf(te).size()){
+				nlv = se;
+				nhv = te;
+			}else{
+				
+				nlv = te;
+				nhv = se;
+			}
+			
+			List<Vertex> neighbour = ni.neighborListOf(nlv);
+			for(Vertex w:neighbour){
+				if(g.containsEdge(w, nhv)){
+					/*following two edges need to be processed */
+					DefaultEdge e1 = g.getEdge(nlv, w);
+					DefaultEdge e2 = g.getEdge(w, nhv);
+					int e1s = esh.get(e1).support;
+					int e2s = esh.get(e2).support;
+					
+					
+					
+					/*process the first edge*/
+					if(e1s>0){
+						int p = a[e1s-1];
+						DefaultEdge esw1  = s[p+1];
+						//if(esw1==e){
+						//	p++;
+						//	esw1  = s[p+1];
+						//}
+						s[p+1] = e1;
+						s[eph.get(e1)] = esw1;
+						eph.put(esw1,eph.get(e1));
+						eph.put(e1,p+1);
+						a[e1s-1]++;
+						
+					}else{
+						System.out.println(e);
+						//already in position do not need to update postions after reduce
+						//may not necessary
+					}
+					esh.get(e1).support--;
+					
+					
+					/*process the second edge*/
+					if(e2s>0){
+						int p = a[e2s-1];
+						DefaultEdge esw2  = s[p+1];
+						//if(esw2==e){
+						//	p++;
+						//	esw2  = s[p+1];
+						//}
+						s[p+1] = e2;
+						s[eph.get(e2)] = esw2;
+						eph.put(esw2,eph.get(e2));
+						eph.put(e2,p+1);
+						a[e2s-1]++;
+					}else{
+						//already in position do not need to update postions after reduce
+						//may not necessary
+						System.out.println(e);
+					}
+					
+					esh.get(e2).support--;
+				}
+				
+			}
+			
+			//remove e
+			//printArray(s);
+			System.out.println(s[i]+":"+k);
+			et.et.put(s[i], k);
+			g.removeEdge(s[i]);
+			//System.out.println(i);
+			
+		}
+		//System.out.println(esh);
+		//printArray(s);
+		
+	}
+	
+	
+	/**
+	 * Only for testing purpose 
+	 * @param ea
+	 */
+	@SuppressWarnings("unused")
+	private void printArray(DefaultEdge [] ea){
+		for(int i=0; i<ea.length; i++){
+			System.out.println(ea[i]);
+			
+			
+		}
+	}
+	
+	
+	private int edgesSupport(Hashtable<DefaultEdge, EdgeSupport> esh){
+		
+		/*data structure initialization*/
+		int maxSupport = 0;
+		Set<DefaultEdge> edges = g.edgeSet();
+		Vertex sv;
+		Vertex tv;
+		ArrayList<Vertex> svn = new ArrayList<>();
+		ArrayList<Vertex> tvn = new ArrayList<>();
+		NeighborIndex<Vertex, DefaultEdge> ni = new NeighborIndex<>(g);
+		
+		
+		for(DefaultEdge e:edges){
+			sv = g.getEdgeSource(e);
+			tv = g.getEdgeTarget(e);
+			svn.addAll(ni.neighborsOf(sv));
+			tvn.addAll(ni.neighborsOf(tv)); 
+			
+			svn.retainAll(tvn);
+			int support = svn.size();
+			if(support >= maxSupport){
+				maxSupport = support;
+			}
+			EdgeSupport es = new EdgeSupport();
+			es.support = support;
+			es.e = e;
+			esh.put(e, es);
+			svn.clear();
+			tvn.clear();
+		}
+		
+		return maxSupport;
 		
 	}
 	

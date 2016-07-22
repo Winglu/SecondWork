@@ -16,6 +16,11 @@ public class EdgeSupport {
 	public Integer support;
 	
 	
+	public String toString(){
+		return support.toString();
+		
+	}
+	
 	public boolean equals(Object o){
 		if(this==o){
 			

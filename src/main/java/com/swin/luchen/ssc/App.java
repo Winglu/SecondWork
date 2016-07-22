@@ -58,8 +58,8 @@ public class App
     	
     	FileReader.readAdjacentList();
         TrussDecomposition td = new TrussDecomposition(Graph.uGraph);
-        td.trussDecomposition();
-        
+        //td.trussDecomposition();
+        td.sortBasedTD();
         
         System.out.println(td.et);
         //initialize spatial index
