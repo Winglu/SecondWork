@@ -4,20 +4,7 @@ package com.swin.luchen.ssc;
 
 //import org.jgrapht.graph.DefaultEdge;
 
-import java.io.BufferedWriter;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.io.PrintWriter;
-import java.util.Hashtable;
-import java.util.Set;
 
-import org.jgrapht.graph.DefaultEdge;
-
-import ds.Community;
-import ds.DistanceIndex;
-import ds.EdgeSupport;
-import alg.CommunityDetector;
-//import alg.CommunityQuerier;
 
 //import java.util.Hashtable;
 
@@ -31,14 +18,14 @@ import alg.CommunityDetector;
 //import org.jgrapht.graph.DefaultEdge;
 //import org.jgrapht.traverse.BreadthFirstIterator;
 
-import alg.SpSoComQuerier;
 //import alg.TCPIndexing;
 import alg.TrussDecomposition;
+import cutility.CFileWriter;
+import cutility.FileReader;
 import jgraphtResearch.Graph;
-import jgraphtResearch.Vertex;
-import utility.CFileWriter;
+
 //import jgraphtResearch.Vertex;
-import utility.FileReader;
+
 //import jgraphtResearch.Graph;
 //import jgraphtResearch.Vertex;
 
@@ -53,10 +40,15 @@ public class App
     	
     	/***********************current stage*************************************/
     	//FileReader.readEdgesFromFile();
-    	FileReader.readSupportnessFromFile();
+    	//FileReader.readSupportnessFromFile();
+    	FileReader.readAdjacentList();
     	TrussDecomposition td = new TrussDecomposition(Graph.uGraph);
-    	td.esh = FileReader.esh;
+    	//System.out.println(Graph.uGraph.edgeSet().size());
+    	//td.esh = FileReader.esh;
     	td.sortBasedTD();
+    	//System.out.println("**********************Finish********************************");
+    	
+    	System.out.println(td.et.et);
     	//System.out.println("start writing");
     	//CFileWriter.trussToFile(td.et);
     	//Vertex vs = new Vertex("0");

@@ -17,7 +17,7 @@ import org.jgrapht.alg.NeighborIndex;
 import org.jgrapht.event.GraphEdgeChangeEvent;
 import org.jgrapht.graph.DefaultEdge;
 
-import utility.FileReader;
+import cutility.FileReader;
 import ds.EdgeSupport;
 import ds.EdgeTrussness;
 
@@ -43,6 +43,7 @@ public class TrussDecomposition {
 		this.g = g;
 		removedEdges = new LinkedBlockingQueue<>();
 		et = new EdgeTrussness();
+		esh = new Hashtable<>();
 		
 	}
 	
@@ -56,7 +57,10 @@ public class TrussDecomposition {
 	public void sortBasedTD(){
 		/*compute support of each edge*/
 		//Hashtable<DefaultEdge, EdgeSupport> esh = new Hashtable<>();
-		int maxSupport = FileReader.maxs;
+		//int maxSupport = FileReader.maxs;
+		
+		int maxSupport = edgesSupport(esh);
+		
 		//System.out.println(maxSupport);
 		/*initialize auxiliary array*/
 		int a[] = new int [maxSupport+1]; // a[0] is used for edges that do not belong to any triangles 
@@ -101,20 +105,161 @@ public class TrussDecomposition {
 //			
 //		}
 
-		System.out.println(s.length);
-		System.out.println(a.length);
-	    //System.out.println("******************************************************");
+		//System.out.println(s.length);
+		//System.out.println(a.length);
+	    System.out.println("******************************************************");
 		/*Testing*/
 		
 		/*real decomposition*/
-		//efficientTD(s,a,eph,esh);
+		efficientTD(s,a,eph,esh);
 		
 		
 		
 		//graphRecovery();
 	}
 	
+	
+	
+	private void edgeUpdate(DefaultEdge ne,
+			DefaultEdge ce,
+			Hashtable<DefaultEdge, Integer> eph, 
+			Hashtable<DefaultEdge, EdgeSupport> esh,
+			DefaultEdge [] s,
+			int [] a){
+		
+		Integer sne = esh.get(ne).support ;
+		Integer sce = esh.get(ce).support;
+		
+		if(sne <= sce){
+			//careful update
+			//move the ne next to the position of ce
+			//in other words, exchange s[pos[ce]+1] and s[pos[ne]] (ne)
+			//be careful that s[pos[ce]+1] could be the s[pos[ne]] (ne)
+			
+			int currentPofCe = eph.get(ce);
+			
+				DefaultEdge te = s[currentPofCe+1];
+				s[currentPofCe+1] = ne;
+				s[eph.get(ne)] = te;
+				
+				//update position table
+				
+				
+				
+				eph.put(te,eph.get(ne));
+				eph.put(ne, currentPofCe+1);
+				
+				a[sne-1]++;
+				
+			
+			
+			
+				//a[sne-1]++;
+			
+			
+			
+		}else{
+			//normal update
+			
+			//here means the supportness of ne is larger than the supportness of ce
+			
+				int p = a[sne-1];
+				
+				
+					DefaultEdge esw  = s[p+1];
+					s[p+1] = ne;
+					s[eph.get(ne)] = esw;
+					eph.put(esw,eph.get(ne));
+					eph.put(ne,p+1);
+					a[sne-1]++;
+				
+				
+				
+				
+			
+			
+		}
+		
+		
+	}
+	
+	
 	private void efficientTD(DefaultEdge [] s,
+			int [] a,
+			Hashtable<DefaultEdge, Integer> eph,
+			Hashtable<DefaultEdge, EdgeSupport> esh){
+		
+		int k = 2;
+		//NeighborIndex<Vertex, DefaultEdge> ni = new NeighborIndex<>(g);
+		//System.out.println(s.length);
+		for(int i=0; i<s.length; i++){
+			NeighborIndex<Vertex, DefaultEdge> ni = new NeighborIndex<>(g);
+			
+			//all edges, for each of them with supportness of k, have been processed. So k++
+			if(i>a[k-2]){ 
+				k++;
+			}
+			DefaultEdge e = s[i];
+			
+			//move e to processed edges
+			/*Veli Veli important*/
+			/*
+			 * here something is wrong
+			 */
+
+			
+			
+			Vertex se = g.getEdgeSource(e);
+			Vertex te = g.getEdgeTarget(e);
+			Vertex nlv,nhv;
+			if(ni.neighborsOf(se).size()<= ni.neighborsOf(te).size()){
+				nlv = se;
+				nhv = te;
+			}else{
+				
+				nlv = te;
+				nhv = se;
+			}
+			
+			List<Vertex> neighbour = ni.neighborListOf(nlv);
+			for(Vertex w:neighbour){
+				if(g.containsEdge(w, nhv)){
+					/*following two edges need to be processed */
+					DefaultEdge e1 = g.getEdge(nlv, w);
+					DefaultEdge e2 = g.getEdge(w, nhv);
+					//int e1s = esh.get(e1).support;
+					//int e2s = esh.get(e2).support;
+					
+					
+					
+					/*process the first edge*/
+					edgeUpdate(e1,e,eph,esh,s,a);
+					esh.get(e1).support--;
+					
+					/*process the second edge*/
+					edgeUpdate(e2,e,eph,esh,s,a);
+					esh.get(e2).support--;
+				}
+				
+			}
+			
+			//remove e
+			//printArray(s);
+			//System.out.println(s[i]+":"+k);
+			et.et.put(s[i], k);
+			removedEdges.add(s[i]);
+			g.removeEdge(s[i]);
+			
+			//System.out.println(i);
+			
+		}
+		//System.out.println(esh);
+		//printArray(s);
+		
+	}
+	
+	
+	private void previousEfficientTD(DefaultEdge [] s,
 			int [] a,
 			Hashtable<DefaultEdge, Integer> eph,
 			Hashtable<DefaultEdge, EdgeSupport> esh){
