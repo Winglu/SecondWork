@@ -23,6 +23,7 @@ public class Graph {
 		addVertexToGraph(vd);
 		
 		uGraph.addEdge(vs, vd);
+		//uGraph.addEdge(vd, vs);
 		
 	}
 	

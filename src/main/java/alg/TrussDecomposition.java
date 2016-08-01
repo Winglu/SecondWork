@@ -17,6 +17,7 @@ import org.jgrapht.alg.NeighborIndex;
 import org.jgrapht.event.GraphEdgeChangeEvent;
 import org.jgrapht.graph.DefaultEdge;
 
+import utility.FileReader;
 import ds.EdgeSupport;
 import ds.EdgeTrussness;
 
@@ -36,6 +37,8 @@ public class TrussDecomposition {
 	
 	public  EdgeTrussness et; 
 	
+	
+	public Hashtable<DefaultEdge, EdgeSupport> esh;
 	public TrussDecomposition(UndirectedGraph<Vertex, DefaultEdge> g){
 		this.g = g;
 		removedEdges = new LinkedBlockingQueue<>();
@@ -52,9 +55,9 @@ public class TrussDecomposition {
 	
 	public void sortBasedTD(){
 		/*compute support of each edge*/
-		Hashtable<DefaultEdge, EdgeSupport> esh = new Hashtable<>();
-		int maxSupport = edgesSupport(esh);
-		
+		//Hashtable<DefaultEdge, EdgeSupport> esh = new Hashtable<>();
+		int maxSupport = FileReader.maxs;
+		//System.out.println(maxSupport);
 		/*initialize auxiliary array*/
 		int a[] = new int [maxSupport+1]; // a[0] is used for edges that do not belong to any triangles 
 		for(int i=0; i<=maxSupport; i++){
@@ -66,11 +69,6 @@ public class TrussDecomposition {
 			a[esh.get(e).support]++;
 		}
 		
-		/*for(int i=0; i<a.length; i++){
-			System.out.println(i+":"+a[i]);
-			
-		}*/
-		
 		
 		int l = 0;
 		for(int i=0; i<=maxSupport; i++){
@@ -78,7 +76,6 @@ public class TrussDecomposition {
 			a[i] = l;
 			l = l+t;
 		}//now a[i] stores the position of first edge with support of i in s
-		
 		
 		
 		/*initialize edge array*/
@@ -99,19 +96,22 @@ public class TrussDecomposition {
 		
 		
 		/*Testing：pass*/
-		/*for(int i=0; i<s.length; i++){
-			System.out.println(s[i]+"support is:"+esh.get(s[i]).support);
-			
-		}
-		for(int i=0; i<a.length; i++){
-			System.out.println(i+":"+a[i]);
-			
-		}
-		*/
+//		for(int i=0; i<s.length; i++){
+//			System.out.println(s[i]+"support is:"+esh.get(s[i]).support);
+//			
+//		}
+
+		System.out.println(s.length);
+		System.out.println(a.length);
+	    //System.out.println("******************************************************");
 		/*Testing*/
 		
 		/*real decomposition*/
-		efficientTD(s,a,eph,esh);
+		//efficientTD(s,a,eph,esh);
+		
+		
+		
+		//graphRecovery();
 	}
 	
 	private void efficientTD(DefaultEdge [] s,
@@ -124,7 +124,9 @@ public class TrussDecomposition {
 		//System.out.println(s.length);
 		for(int i=0; i<s.length; i++){
 			NeighborIndex<Vertex, DefaultEdge> ni = new NeighborIndex<>(g);
-			if(i>a[k-2]){
+			
+			//all edges, for each of them with supportness of k, have been processed. So k++
+			if(i>a[k-2]){ 
 				k++;
 			}
 			DefaultEdge e = s[i];
@@ -132,7 +134,7 @@ public class TrussDecomposition {
 			//move e to processed edges
 			/*Veli Veli important*/
 			if(esh.get(e).support>0){
-				a[esh.get(e).support-1]++;
+				a[esh.get(e).support-1]++; //this edge has been processed, to avoid this edge be moved
 			}
 			
 			
@@ -162,19 +164,32 @@ public class TrussDecomposition {
 					/*process the first edge*/
 					if(e1s>0){
 						int p = a[e1s-1];
-						DefaultEdge esw1  = s[p+1];
-						//if(esw1==e){
-						//	p++;
-						//	esw1  = s[p+1];
-						//}
-						s[p+1] = e1;
-						s[eph.get(e1)] = esw1;
-						eph.put(esw1,eph.get(e1));
-						eph.put(e1,p+1);
-						a[e1s-1]++;
+						
+						if(p+1>=s.length){
+							//a[e1s-1]++;
+							System.out.println("*");
+						}else{
+							try{
+								DefaultEdge esw1  = s[p+1];
+								//if(esw1==e){
+								//	p++;
+								//	esw1  = s[p+1];
+								//}
+								s[p+1] = e1;
+								s[eph.get(e1)] = esw1;
+								eph.put(esw1,eph.get(e1));
+								eph.put(e1,p+1);
+								a[e1s-1]++;
+							}catch(ArrayIndexOutOfBoundsException excep){
+								System.out.println(e1s);
+								System.out.println(p);
+								System.out.println(s.length);
+							}
+						}
+						
 						
 					}else{
-						System.out.println(e);
+						//System.out.println(e);
 						//already in position do not need to update postions after reduce
 						//may not necessary
 					}
@@ -183,21 +198,61 @@ public class TrussDecomposition {
 					
 					/*process the second edge*/
 					if(e2s>0){
-						int p = a[e2s-1];
-						DefaultEdge esw2  = s[p+1];
-						//if(esw2==e){
-						//	p++;
-						//	esw2  = s[p+1];
-						//}
-						s[p+1] = e2;
-						s[eph.get(e2)] = esw2;
-						eph.put(esw2,eph.get(e2));
-						eph.put(e2,p+1);
-						a[e2s-1]++;
-					}else{
+							int p = a[e2s-1];
+							
+							
+							if(p+1>=s.length){
+								//a[e2s-1]++;
+								System.out.println("*");
+							}else{
+								try{
+								DefaultEdge esw2  = s[p+1];
+								//if(esw2==e){
+								//	p++;
+								//	esw2  = s[p+1];
+								//}
+								s[p+1] = e2;
+								s[eph.get(e2)] = esw2;
+								eph.put(esw2,eph.get(e2));
+								eph.put(e2,p+1);
+								a[e2s-1]++;
+								}catch(ArrayIndexOutOfBoundsException excep){
+									System.out.println(e2s);
+									System.out.println(p);
+									System.out.println(s.length);
+								}
+							}
+							
+							//DefaultEdge esw2  = s[p+1];
+							//s[p+1] = e2;
+							//s[eph.get(e2)] = esw2;
+							//eph.put(esw2,eph.get(e2));
+							//eph.put(e2,p+1);
+							//a[e2s-1]++;
+					
+//						try{
+//							
+//							//int p = a[e2s-1];
+//							DefaultEdge esw2  = s[p+1];
+//							//if(esw2==e){
+//							//	p++;
+//							//	esw2  = s[p+1];
+//							//}
+//							s[p+1] = e2;
+//							s[eph.get(e2)] = esw2;
+//							eph.put(esw2,eph.get(e2));
+//							eph.put(e2,p+1);
+//							a[e2s-1]++;
+//						}catch(ArrayIndexOutOfBoundsException excep){
+//							System.out.println(e2s);
+//							System.out.println(p);
+//							System.out.println(s.length);
+//						}
+					}	
+					else{
 						//already in position do not need to update postions after reduce
 						//may not necessary
-						System.out.println(e);
+						//System.out.println(e);
 					}
 					
 					esh.get(e2).support--;
@@ -207,9 +262,11 @@ public class TrussDecomposition {
 			
 			//remove e
 			//printArray(s);
-			System.out.println(s[i]+":"+k);
+			//System.out.println(s[i]+":"+k);
 			et.et.put(s[i], k);
+			removedEdges.add(s[i]);
 			g.removeEdge(s[i]);
+			
 			//System.out.println(i);
 			
 		}
@@ -233,7 +290,7 @@ public class TrussDecomposition {
 	}
 	
 	
-	private int edgesSupport(Hashtable<DefaultEdge, EdgeSupport> esh){
+	public int edgesSupport(Hashtable<DefaultEdge, EdgeSupport> esh){
 		
 		/*data structure initialization*/
 		int maxSupport = 0;
