@@ -19,10 +19,15 @@ package com.swin.luchen.ssc;
 //import org.jgrapht.traverse.BreadthFirstIterator;
 
 //import alg.TCPIndexing;
+import java.util.Set;
+
+import alg.CommunityDetector;
 import alg.TrussDecomposition;
 import cutility.CFileWriter;
 import cutility.FileReader;
+import ds.Community;
 import jgraphtResearch.Graph;
+import jgraphtResearch.Vertex;
 
 //import jgraphtResearch.Vertex;
 
@@ -41,14 +46,32 @@ public class App
     	/***********************current stage*************************************/
     	//FileReader.readEdgesFromFile();
     	//FileReader.readSupportnessFromFile();
-    	FileReader.readAdjacentList();
-    	TrussDecomposition td = new TrussDecomposition(Graph.uGraph);
+    	//FileReader.readAdjacentList();
+    	FileReader.readTrussesFromFile();
+    	
+    	CommunityDetector cd = new CommunityDetector();
+    	cd.et = FileReader.et;
+        cd.detectCommunityOnGraph(Graph.uGraph, 6);
+        //System.out.println(cd.comList.size());
+        int counter = 0;
+        for(Community c:cd.comList){
+        	Set<Vertex> cvs = c.com.vertexSet();
+        	
+        	
+        }
+        
+        Community c1 = cd.comList.get(6);
+        System.out.println(c1);
+        Community c2= cd.comList.get(12);
+        System.out.println(c2);
+    	
+    	//TrussDecomposition td = new TrussDecomposition(Graph.uGraph);
     	//System.out.println(Graph.uGraph.edgeSet().size());
     	//td.esh = FileReader.esh;
-    	td.sortBasedTD();
+    	//td.sortBasedTD();
     	//System.out.println("**********************Finish********************************");
     	
-    	System.out.println(td.et.et);
+    	//System.out.println(td.et.et);
     	//System.out.println("start writing");
     	//CFileWriter.trussToFile(td.et);
     	//Vertex vs = new Vertex("0");

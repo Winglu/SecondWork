@@ -57,9 +57,9 @@ public class TrussDecomposition {
 	public void sortBasedTD(){
 		/*compute support of each edge*/
 		//Hashtable<DefaultEdge, EdgeSupport> esh = new Hashtable<>();
-		//int maxSupport = FileReader.maxs;
+		int maxSupport = FileReader.maxs;
 		
-		int maxSupport = edgesSupport(esh);
+		//int maxSupport = edgesSupport(esh);
 		
 		//System.out.println(maxSupport);
 		/*initialize auxiliary array*/
@@ -74,11 +74,11 @@ public class TrussDecomposition {
 		}
 		
 		
-		int l = 0;
+		int start = 0;
 		for(int i=0; i<=maxSupport; i++){
 			int t = a[i];
-			a[i] = l;
-			l = l+t;
+			a[i] = start;
+			start = start+t;
 		}//now a[i] stores the position of first edge with support of i in s
 		
 		
@@ -94,11 +94,14 @@ public class TrussDecomposition {
 		}
 		
 		//printArray(s);
-		for(int i=0; i<a.length; i++){
-			a[i]--;
+		//for(int i=0; i<a.length; i++){
+		//	a[i]--;
+		//}
+		
+		for(int i = maxSupport; i>=1; i--){
+			a[i] = a[i-1];
 		}
-		
-		
+		a[0]=0;
 		/*Testing：pass*/
 //		for(int i=0; i<s.length; i++){
 //			System.out.println(s[i]+"support is:"+esh.get(s[i]).support);
@@ -136,20 +139,20 @@ public class TrussDecomposition {
 			//in other words, exchange s[pos[ce]+1] and s[pos[ne]] (ne)
 			//be careful that s[pos[ce]+1] could be the s[pos[ne]] (ne)
 			
-			int currentPofCe = eph.get(ce);
+			//int currentPofCe = eph.get(ce);
 			
-				DefaultEdge te = s[currentPofCe+1];
-				s[currentPofCe+1] = ne;
-				s[eph.get(ne)] = te;
+			//	DefaultEdge te = s[currentPofCe+1];
+			//	s[currentPofCe+1] = ne;
+			//	s[eph.get(ne)] = te;
 				
 				//update position table
 				
 				
 				
-				eph.put(te,eph.get(ne));
-				eph.put(ne, currentPofCe+1);
+			//	eph.put(te,eph.get(ne));
+			//	eph.put(ne, currentPofCe+1);
 				
-				a[sne-1]++;
+			//	a[sne-1]++;
 				
 			
 			
@@ -162,22 +165,22 @@ public class TrussDecomposition {
 			//normal update
 			
 			//here means the supportness of ne is larger than the supportness of ce
-			
-				int p = a[sne-1];
 				
+				int pne = eph.get(ne);
+				int pnew = a[sne];
+				DefaultEdge se = s[pnew];
 				
-					DefaultEdge esw  = s[p+1];
-					s[p+1] = ne;
-					s[eph.get(ne)] = esw;
-					eph.put(esw,eph.get(ne));
-					eph.put(ne,p+1);
-					a[sne-1]++;
-				
-				
-				
-				
-			
-			
+				if(se!=ne){
+					
+					eph.put(ne, pnew);
+					eph.put(se, pne);
+					
+					s[pne] = se;
+					s[pnew] = ne;
+					
+				}
+				a[sne]++;
+				esh.get(ne).support--;
 		}
 		
 		
@@ -193,62 +196,63 @@ public class TrussDecomposition {
 		//NeighborIndex<Vertex, DefaultEdge> ni = new NeighborIndex<>(g);
 		//System.out.println(s.length);
 		for(int i=0; i<s.length; i++){
+			DefaultEdge e = s[i];
 			NeighborIndex<Vertex, DefaultEdge> ni = new NeighborIndex<>(g);
 			
-			//all edges, for each of them with supportness of k, have been processed. So k++
-			if(i>a[k-2]){ 
+			if(i>=a[k-1]){ 
 				k++;
 			}
-			DefaultEdge e = s[i];
-			
-			//move e to processed edges
-			/*Veli Veli important*/
-			/*
-			 * here something is wrong
-			 */
-
 			
 			
-			Vertex se = g.getEdgeSource(e);
-			Vertex te = g.getEdgeTarget(e);
-			Vertex nlv,nhv;
-			if(ni.neighborsOf(se).size()<= ni.neighborsOf(te).size()){
-				nlv = se;
-				nhv = te;
-			}else{
+			if(esh.get(e).support>0){
+				//if current edge support is zero, remove it directly, since its removal will not affect other edges
 				
-				nlv = te;
-				nhv = se;
-			}
-			
-			List<Vertex> neighbour = ni.neighborListOf(nlv);
-			for(Vertex w:neighbour){
-				if(g.containsEdge(w, nhv)){
-					/*following two edges need to be processed */
-					DefaultEdge e1 = g.getEdge(nlv, w);
-					DefaultEdge e2 = g.getEdge(w, nhv);
-					//int e1s = esh.get(e1).support;
-					//int e2s = esh.get(e2).support;
+				//
+				Vertex se = g.getEdgeSource(e);
+				Vertex te = g.getEdgeTarget(e);
+				Vertex nlv,nhv;
+				if(ni.neighborsOf(se).size()<= ni.neighborsOf(te).size()){
+					nlv = se;
+					nhv = te;
+				}else{
 					
-					
-					
-					/*process the first edge*/
-					edgeUpdate(e1,e,eph,esh,s,a);
-					esh.get(e1).support--;
-					
-					/*process the second edge*/
-					edgeUpdate(e2,e,eph,esh,s,a);
-					esh.get(e2).support--;
+					nlv = te;
+					nhv = se;
 				}
 				
+				List<Vertex> neighbour = ni.neighborListOf(nlv);
+				for(Vertex w:neighbour){
+					if(g.containsEdge(w, nhv)){
+						/*following two edges need to be processed */
+						DefaultEdge e1 = g.getEdge(nlv, w);
+						DefaultEdge e2 = g.getEdge(w, nhv);
+						//int e1s = esh.get(e1).support;
+						//int e2s = esh.get(e2).support;
+						
+						
+						
+						/*process the first edge*/
+						edgeUpdate(e1,e,eph,esh,s,a);
+						//esh.get(e1).support--;
+						
+						/*process the second edge*/
+						edgeUpdate(e2,e,eph,esh,s,a);
+						//esh.get(e2).support--;
+					}
+					
+				}
+				
+				
 			}
 			
-			//remove e
-			//printArray(s);
-			//System.out.println(s[i]+":"+k);
 			et.et.put(s[i], k);
 			removedEdges.add(s[i]);
 			g.removeEdge(s[i]);
+						
+			//remove e
+			//printArray(s);
+			//System.out.println(s[i]+":"+k);
+			
 			
 			//System.out.println(i);
 			

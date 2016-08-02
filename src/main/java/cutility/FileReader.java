@@ -124,7 +124,7 @@ public class FileReader {
 	public static void readTrussesFromFile(){
 			
 			ClassLoader classloader = Thread.currentThread().getContextClassLoader();
-			InputStream is = classloader.getResourceAsStream("truss_index.txt");
+			InputStream is = classloader.getResourceAsStream("truss_update_index.txt");
 			
 			String str = "";
 			String[] sstr;
