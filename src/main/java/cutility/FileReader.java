@@ -63,6 +63,57 @@ public class FileReader {
 	}
 	
 	
+	
+	/**
+	 * 
+	 * Read truss community
+	 * 
+	 */
+	
+	public static void readTrussCommunity(){
+		ClassLoader classloader = Thread.currentThread().getContextClassLoader();
+		InputStream is = classloader.getResourceAsStream("selected6truss.txt");
+		//maxs = 0;
+		String str = "";
+		String[] sstr;
+		try{
+			BufferedReader reader = new BufferedReader(new InputStreamReader(is));
+			if(is!=null){
+				//read adjacentList line by line
+				while((str = reader.readLine())!=null){
+					//System.out.println(str);
+					sstr = str.split("\t");
+					
+					Vertex vs = new Vertex(sstr[0]);
+					Vertex vt = new Vertex(sstr[1]);
+				
+					Graph.addEdgeToGraph(vs, vt);
+					//EdgeSupport es = new EdgeSupport();
+					//es.e = Graph.uGraph.getEdge(vs, vt);
+					//es.support = Integer.parseInt(sstr[2]);
+					//if(es.support>=maxs){
+						
+					//	maxs=es.support;
+					//}
+					//esh.put(Graph.uGraph.getEdge(vs, vt),es);
+				}
+				
+			}
+		} catch (IOException e) {
+			
+		}finally{
+			try {
+				is.close();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+	}
+	
+	
+	
+	
 	/**
 	 * 
 	 * read supportness

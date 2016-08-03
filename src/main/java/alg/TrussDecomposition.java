@@ -57,10 +57,10 @@ public class TrussDecomposition {
 	public void sortBasedTD(){
 		/*compute support of each edge*/
 		//Hashtable<DefaultEdge, EdgeSupport> esh = new Hashtable<>();
-		int maxSupport = FileReader.maxs;
+		//int maxSupport = FileReader.maxs;
 		
-		//int maxSupport = edgesSupport(esh);
-		
+		int maxSupport = edgesSupport(esh);
+		//System.out.println(esh);
 		//System.out.println(maxSupport);
 		/*initialize auxiliary array*/
 		int a[] = new int [maxSupport+1]; // a[0] is used for edges that do not belong to any triangles 
@@ -110,7 +110,7 @@ public class TrussDecomposition {
 
 		//System.out.println(s.length);
 		//System.out.println(a.length);
-	    System.out.println("******************************************************");
+	    //System.out.println("******************************************************");
 		/*Testing*/
 		
 		/*real decomposition*/
@@ -118,7 +118,7 @@ public class TrussDecomposition {
 		
 		
 		
-		//graphRecovery();
+		graphRecovery();
 	}
 	
 	
