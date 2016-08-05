@@ -57,9 +57,12 @@ public class TrussDecomposition {
 	public void sortBasedTD(){
 		/*compute support of each edge*/
 		//Hashtable<DefaultEdge, EdgeSupport> esh = new Hashtable<>();
-		//int maxSupport = FileReader.maxs;
 		
+		/*switcher*/
+		//int maxSupport = FileReader.maxs;
 		int maxSupport = edgesSupport(esh);
+		
+		
 		//System.out.println(esh);
 		//System.out.println(maxSupport);
 		/*initialize auxiliary array*/
@@ -115,9 +118,6 @@ public class TrussDecomposition {
 		
 		/*real decomposition*/
 		efficientTD(s,a,eph,esh);
-		
-		
-		
 		graphRecovery();
 	}
 	
@@ -199,11 +199,12 @@ public class TrussDecomposition {
 			DefaultEdge e = s[i];
 			NeighborIndex<Vertex, DefaultEdge> ni = new NeighborIndex<>(g);
 			
-			if(i>=a[k-1]){ 
+//			if(i>=a[k-1]){ 
+//				k++;
+//			}
+			while(i>=a[k-1]){
 				k++;
 			}
-			
-			
 			if(esh.get(e).support>0){
 				//if current edge support is zero, remove it directly, since its removal will not affect other edges
 				

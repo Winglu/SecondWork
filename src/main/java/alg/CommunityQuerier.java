@@ -14,6 +14,7 @@ import org.jgrapht.graph.DefaultEdge;
 
 
 
+
 import ds.EdgeDirected;
 //import ds.EdgeSupport;
 import ds.EdgeTrussness;
@@ -59,7 +60,7 @@ public class CommunityQuerier {
 		NeighborIndex<Vertex, DefaultEdge> ni = new NeighborIndex<>(g);
 		//ArrayList<DefaultEdge> nov = new ArrayList<>(g.edgesOf(v));
 		List<Vertex> nov = ni.neighborListOf(v);
-		
+		System.out.println(g.edgeSet()+"~~~");
 		for(Vertex nv:nov){
 			DefaultEdge e = g.getEdge(v, nv);
 			EdgeDirected dde = new EdgeDirected(v,nv);

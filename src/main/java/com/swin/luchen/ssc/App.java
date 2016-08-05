@@ -25,6 +25,7 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.Set;
 
+import org.jgrapht.alg.NeighborIndex;
 import org.jgrapht.graph.DefaultEdge;
 
 import alg.CommunityDetector;
@@ -49,55 +50,77 @@ public class App
     public static void main(String[] args )
     {
     	
-    	/***********************current stage*************************************/
+    	/**********current stage**********/
+    	FileReader.readTrussCommunity();
+//    	FileReader.readTrussesFromFile();
+//    	NeighborIndex<Vertex, DefaultEdge> ni = new NeighborIndex<>(Graph.uGraph);
+//    	System.out.println(ni.neighborsOf(new Vertex("60949")).size()+"-"+ni.neighborsOf(new Vertex("60949")));
+//    	Graph.uGraph.removeVertex(new Vertex("86499"));
+    	TrussDecomposition td = new TrussDecomposition(Graph.uGraph);
+    	td.sortBasedTD();
+    	CommunityDetector cd = new CommunityDetector();
+    	cd.et = td.et;
+    	cd.detectCommunityOnGraph(Graph.uGraph, 6);
+    	for(Community c: cd.comList){
+    		System.out.println(c.com.edgeSet().size());
+    		System.out.println(c.com.vertexSet().size());
+    		System.out.println(c.com);
+    		System.out.println("*************************");
+    	}
+//    	Community c1 = cd.comList.get(7);
+////    	//c1.com.removeVertex(new Vertex("62050"));
+    	System.out.println(cd.comList.size());
+////    	//System.out.println(c1);
+//		try{
+//			FileWriter fw = new FileWriter("selected6truss4.txt", true);
+//			BufferedWriter bw = new BufferedWriter(fw);
+//			PrintWriter out = new PrintWriter(bw);
+//
+//			for(DefaultEdge e:c1.com.edgeSet()){
+//				out.println(Graph.uGraph.getEdgeSource(e)+"\t"+Graph.uGraph.getEdgeTarget(e));
+//        	
+//			}
+//			out.close();
+//		}catch(IOException except){
+//	  
+//		}
+//    	cd.detectCommunityOnGraph(Graph.uGraph, 6);
+
+//    	/***********************current stage*************************************/
     	//FileReader.readEdgesFromFile();
     	//FileReader.readSupportnessFromFile();
     	//FileReader.readAdjacentList();
     	//FileReader.readTrussesFromFile();
-    	FileReader.readTrussCommunity();
-    	Graph.uGraph.removeVertex(new Vertex("62050"));
+//    	FileReader.readTrussCommunity();
+//    	Graph.uGraph.removeVertex(new Vertex("28498"));
     	//Graph.uGraph.removeVertex(new Vertex("65873"));
     	//Graph.uGraph.removeVertex(new Vertex("65876"));
     	
-    	System.out.println(Graph.uGraph.edgeSet().size());
-    	System.out.println("------------------------------");
+    	//System.out.println(Graph.uGraph.edgeSet().size());
+    	//System.out.println("------------------------------");
     	//System.out.println(c.com.vertexSet().size());
     	//System.out.println(c.com);
-    	TrussDecomposition td = new TrussDecomposition(Graph.uGraph);
+//    	TrussDecomposition td = new TrussDecomposition(Graph.uGraph);
     	
-    	td.sortBasedTD();
+    	//td.esh = FileReader.esh;
+//    	td.sortBasedTD();
     	//System.out.println(td.et);
     	
-    	CommunityDetector cd = new CommunityDetector();
-    	cd.et = td.et;
+//    	CommunityDetector cd = new CommunityDetector();
+//    	cd.et = td.et;
+    	//System.out.println(cd.et);
     	
-    	
-        cd.detectCommunityOnGraph(Graph.uGraph, 6);
+//        cd.detectCommunityOnGraph(Graph.uGraph, 6);
+        //System.out.println(Graph.uGraph.edgeSet().size());
         //System.out.println(cd.comList.size());
-        for(Community c: cd.comList){
-        	System.out.println(c.com.edgeSet().size());
-        	System.out.println(c.com.vertexSet().size());
-        	System.out.println(c.com);
-        	System.out.println("*************************");
-        }
+//        for(Community c: cd.comList){
+//        	System.out.println(c.com.edgeSet().size());
+//        	System.out.println(c.com.vertexSet().size());
+//        	System.out.println(c.com);
+//        	System.out.println("*************************");
+//        }
         //System.out.println(cd.comList.size());
-        //Community c1 = cd.comList.get(0);
-        //c1.com.removeVertex(new Vertex("62050"));
-        //System.out.println(cd.comList.size());
-        //System.out.println(c1);
-//        try{
-//	        FileWriter fw = new FileWriter("selected6truss.txt", true);
-//		    BufferedWriter bw = new BufferedWriter(fw);
-//		    PrintWriter out = new PrintWriter(bw);
-//	        //int counter = 1;
-//	        for(DefaultEdge e:c1.com.edgeSet()){
-//	        	out.println(Graph.uGraph.getEdgeSource(e)+"\t"+Graph.uGraph.getEdgeTarget(e));
-//	        	
-//	        }
-//	        out.close();
-//        }catch(IOException except){
-//    		
-//    	}
+
 //        //Community c1 = cd.comList.get(6);
         //System.out.println(c1);
         //Community c2= cd.comList.get(12);

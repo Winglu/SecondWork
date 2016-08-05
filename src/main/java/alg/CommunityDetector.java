@@ -46,10 +46,12 @@ public class CommunityDetector {
 		
 		//build vertex adjacent index
 		NeighborIndex<Vertex, DefaultEdge> ni = new NeighborIndex<>(g);
-		
+		//System.out.println(g.edgeSet().size()+"~~~");
+		//System.out.println(et.et);
 		for(DefaultEdge e :g.edgeSet()){
 			
 			if(et.et.get(e)>=k){
+				
 				if(visitedEdges.contains(e)!=true){
 				
 					Queue<DefaultEdge> q = new LinkedBlockingQueue<>();
@@ -80,7 +82,7 @@ public class CommunityDetector {
 							DefaultEdge  ats = g.getEdge(tv,vn);
 							
 							if(aes!=null && ats!=null){
-								
+
 								if(et.et.get(aes)>=k && et.et.get(ats)>=k){
 									if(!visitedEdges.contains(aes)){
 										q.add(aes);

@@ -72,7 +72,7 @@ public class FileReader {
 	
 	public static void readTrussCommunity(){
 		ClassLoader classloader = Thread.currentThread().getContextClassLoader();
-		InputStream is = classloader.getResourceAsStream("selected6truss.txt");
+		InputStream is = classloader.getResourceAsStream("selected6truss4.txt");
 		//maxs = 0;
 		String str = "";
 		String[] sstr;
