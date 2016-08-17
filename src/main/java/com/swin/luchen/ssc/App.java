@@ -53,14 +53,15 @@ public class App
     	/**********current stage**********/
     	FileReader.readTrussCommunity();
 //    	FileReader.readTrussesFromFile();
-//    	NeighborIndex<Vertex, DefaultEdge> ni = new NeighborIndex<>(Graph.uGraph);
-//    	System.out.println(ni.neighborsOf(new Vertex("60949")).size()+"-"+ni.neighborsOf(new Vertex("60949")));
-//    	Graph.uGraph.removeVertex(new Vertex("86499"));
+    	NeighborIndex<Vertex, DefaultEdge> ni = new NeighborIndex<>(Graph.uGraph);
+//    	System.out.println(ni.neighborsOf(new Vertex("32969")).size()+"-"+ni.neighborsOf(new Vertex("32969")));
+    	Graph.uGraph.removeVertex(new Vertex("1120"));
+
     	TrussDecomposition td = new TrussDecomposition(Graph.uGraph);
     	td.sortBasedTD();
     	CommunityDetector cd = new CommunityDetector();
     	cd.et = td.et;
-    	cd.detectCommunityOnGraph(Graph.uGraph, 6);
+    	cd.detectCommunityOnGraph(Graph.uGraph,6);
     	for(Community c: cd.comList){
     		System.out.println(c.com.edgeSet().size());
     		System.out.println(c.com.vertexSet().size());
