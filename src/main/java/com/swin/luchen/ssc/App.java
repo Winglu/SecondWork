@@ -54,8 +54,8 @@ public class App
     	FileReader.readTrussCommunity();
 //    	FileReader.readTrussesFromFile();
     	NeighborIndex<Vertex, DefaultEdge> ni = new NeighborIndex<>(Graph.uGraph);
-//    	System.out.println(ni.neighborsOf(new Vertex("32969")).size()+"-"+ni.neighborsOf(new Vertex("32969")));
-    	Graph.uGraph.removeVertex(new Vertex("1120"));
+    	//System.out.println(ni.neighborsOf(new Vertex("9852")).size()+"-"+ni.neighborsOf(new Vertex("9852")));
+    	Graph.uGraph.removeVertex(new Vertex("9852"));
 
     	TrussDecomposition td = new TrussDecomposition(Graph.uGraph);
     	td.sortBasedTD();
